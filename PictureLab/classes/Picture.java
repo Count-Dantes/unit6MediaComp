@@ -118,6 +118,125 @@ public class Picture extends SimplePicture
     } 
   }
   
+  public void mirrorVerticalRightToLeft()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel leftPixel = null;
+    Pixel rightPixel = null;
+    int width = pixels[0].length;
+    for (int row = 0; row < pixels.length; row++)
+    {
+      for (int col = 0; col < width / 2; col++)
+      {
+        leftPixel = pixels[row][col];
+        rightPixel = pixels[row][width - 1 - col];
+        leftPixel.setColor(rightPixel.getColor());
+      }
+    } 
+  }
+  //mirror horizontal
+  public void mirrorHorizontal()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel bottemPixel = null;
+    int length = pixels.length;
+    int width = pixels[0].length;
+    for (int row = 0; row < length/2; row++)
+    {
+      for (int col = 0; col < width; col++)
+      {
+        topPixel = pixels[row][col];
+        bottemPixel = pixels[length - 1 - row][col];
+        bottemPixel.setColor(topPixel.getColor());
+      }
+    } 
+  }
+  //mirror horizontal
+  public void mirrorHorizontalBotToTop()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel bottemPixel = null;
+    int length = pixels.length;
+    int width = pixels[0].length;
+    for (int row = 0; row < length/2; row++)
+    {
+      for (int col = 0; col < width; col++)
+      {
+        topPixel = pixels[row][col];
+        bottemPixel = pixels[length - 1 - row][col];
+        topPixel.setColor(bottemPixel.getColor());
+      }
+    } 
+  }
+  //mirror diagonal
+  public void mirrorDiagonal()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel botPixel = null;
+    int whitespace = 0;
+    int length = pixels.length;
+    int width = pixels[0].length;
+    for(int row = 0; row < length; row ++)
+    {
+        for(int col = whitespace; col < length; col ++)
+        {
+            topPixel = pixels[row][col];
+            botPixel = pixels[col][row];
+            Color botColor = botPixel.getColor();
+            botPixel.setColor(botPixel.getColor());
+            topPixel.setColor(botColor);
+        }
+        whitespace +=1;
+    }
+}
+
+public void mirrorDiagonalOffset()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel botPixel = null;
+    int whitespace = 0;
+    int length = pixels.length;
+    int width = pixels[0].length;
+    int difference = width-length;
+    for(int row = difference; row <  difference + length; row ++)
+    {
+        for(int col = whitespace; col < length; col ++)
+        {
+            topPixel = pixels[row][col];
+            botPixel = pixels[col][row];
+            Color botColor = botPixel.getColor();
+            botPixel.setColor(botPixel.getColor());
+            topPixel.setColor(botColor);
+        }
+        whitespace +=1;
+    }
+}
+
+public void mirrorDiagonalRightToLeft()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel botPixel = null;
+    int whitespace = 0;
+    int length = pixels.length;
+    int width = pixels[0].length;
+    for(int row = length; row >0; row --)
+    {
+        for(int col = length; col > whitespace; col --)
+        {
+            topPixel = pixels[row][col];
+            botPixel = pixels[col][row];
+            Color botColor = botPixel.getColor();
+            botPixel.setColor(botPixel.getColor());
+            topPixel.setColor(botColor);
+        }
+        whitespace +=1;
+    }
+}
   /** Mirror just part of a picture of a temple */
   public void mirrorTemple()
   {
@@ -223,10 +342,12 @@ public class Picture extends SimplePicture
    */
   public static void main(String[] args) 
   {
-    Picture beach = new Picture("beach.jpg");
-    beach.explore();
-    beach.zeroBlue();
-    beach.explore();
+    Picture arpan = new Picture("arpan.jpg");
+    arpan = arpan.scale(.25,.25);
+    arpan.explore();
+    arpan.mirrorDiagonalOffset();
+    //beach.zeroBlue();
+    arpan.explore();
   }
   
 } // this } is the end of class Picture, put all new methods before this

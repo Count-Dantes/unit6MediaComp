@@ -85,7 +85,21 @@ public class Picture extends SimplePicture
     
   }
   
-  /** Method to set the blue to 0 */
+  
+  /** Method to set the Red to 0 */
+  public void zeroRed()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setRed(0);
+      }
+    }
+  }
+  
+  /** Method to set the Red to 0 */
   public void zeroBlue()
   {
     Pixel[][] pixels = this.getPixels2D();
@@ -94,6 +108,51 @@ public class Picture extends SimplePicture
       for (Pixel pixelObj : rowArray)
       {
         pixelObj.setBlue(0);
+      }
+    }
+  }
+  
+  /** Method to set the Red to 0 */
+  public void zeroGreen()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setGreen(0);
+      }
+    }
+  }
+  
+  
+  public void negate()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setBlue(255-pixelObj.getBlue());
+        pixelObj.setRed(255-pixelObj.getRed());
+        pixelObj.setGreen(255-pixelObj.getGreen());
+      }
+    }
+  }
+  
+  public void grayscale()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    int averageValue = 0;
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        averageValue = pixelObj.getBlue() + pixelObj.getRed() + pixelObj.getGreen();
+        averageValue = averageValue / 3;
+        pixelObj.setBlue(averageValue);
+        pixelObj.setRed(averageValue);
+        pixelObj.setGreen(averageValue);
       }
     }
   }
@@ -216,6 +275,118 @@ public void mirrorDiagonalOffset()
     }
 }
 
+public void posterize()
+{
+    Pixel[][] pixels = this.getPixels2D();
+    int length = pixels.length;
+    int width = pixels[0].length;
+    int redValue = 0;
+    int blueValue = 0;
+    int greenValue = 0;
+    int tempColor = 0;
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        greenValue = pixelObj.getGreen();
+        redValue = pixelObj.getRed();
+        blueValue = pixelObj.getBlue();
+        
+        if (greenValue < 60)
+        {
+            pixelObj.setGreen(30);
+        }
+        else if(greenValue < 120)
+        {
+            pixelObj.setGreen(90);
+        }
+        else if(greenValue < 180)
+        {
+            pixelObj.setGreen(150);
+        }
+        else if(greenValue<255)
+        {
+            pixelObj.setGreen(210);
+        }
+        
+        if (blueValue < 60)
+        {
+            pixelObj.setBlue(30);
+        }
+        else if(blueValue < 120)
+        {
+            pixelObj.setBlue(90);
+        }
+        else if(blueValue < 180)
+        {
+            pixelObj.setBlue(150);
+        }
+        else if(blueValue<255)
+        {
+            pixelObj.setBlue(210);
+        }
+        
+        if (redValue < 60)
+        {
+            pixelObj.setRed(30);
+        }
+        else if(redValue < 120)
+        {
+            pixelObj.setRed(90);
+        }
+        else if(redValue < 180)
+        {
+            pixelObj.setRed(150);
+        }
+        else if(redValue<255)
+        {
+            pixelObj.setRed(210);
+        }
+     
+    }
+}
+}
+
+public void randomize(int offset)
+{
+    Pixel[][] pixels = this.getPixels2D();
+    int length = pixels.length;
+    int width = pixels[0].length;
+    int redValue = 0;
+    int blueValue = 0;
+    int greenValue = 0;
+    int tempColor = 0;
+    for (Pixel[] rowArray : pixels)
+    {
+        for (Pixel pixelObj : rowArray)
+        {
+            greenValue = pixelObj.getGreen();
+            redValue = pixelObj.getRed();
+            blueValue = pixelObj.getBlue();
+            if (100*Math.random() < 10)
+            {
+                if ( ( (int) Math.random()*1) == 0)
+                {
+                    greenValue = greenValue + ( (int) Math.random()* offset);
+                    if (greenValue > 255)
+                    {
+                        greenValue = 25;
+                    }
+                }
+                if ( ( (int) Math.random()*1) == 1)
+                {
+                    greenValue = greenValue - ( (int) Math.random()* offset);
+                    if (greenValue < 0)
+                    {
+                        greenValue = 0;
+                    }
+                }     
+        }
+    }
+}
+}
+    
+
 public void mirrorDiagonalRightToLeft()
   {
     Pixel[][] pixels = this.getPixels2D();
@@ -259,6 +430,11 @@ public void mirrorDiagonalRightToLeft()
         rightPixel.setColor(leftPixel.getColor());
       }
     }
+  }
+  
+  public void scalePic(Picture fromPic, double scaleX, double scaleY)
+  {
+      fromPic.scale(scaleX, scaleY);      
   }
   
   /** copy from the passed fromPic to the
@@ -343,10 +519,16 @@ public void mirrorDiagonalRightToLeft()
   public static void main(String[] args) 
   {
     Picture arpan = new Picture("arpan.jpg");
+    //arpan.scalePic(arpan,.01,.01);
     arpan = arpan.scale(.25,.25);
     arpan.explore();
-    arpan.mirrorDiagonalOffset();
+    //arpan.grayscale();
+    arpan.randomize(50);
+    //arpan.explore();
+
+
     //beach.zeroBlue();
+    //arpan.posterize();
     arpan.explore();
   }
   

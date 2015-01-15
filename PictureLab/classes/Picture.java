@@ -346,7 +346,7 @@ public void posterize()
     }
 }
 }
-
+/*
 public void randomize(int offset)
 {
     Pixel[][] pixels = this.getPixels2D();
@@ -385,7 +385,7 @@ public void randomize(int offset)
     }
 }
 }
-    
+*/  
 
 public void mirrorDiagonalRightToLeft()
   {
@@ -522,8 +522,8 @@ public void mirrorDiagonalRightToLeft()
     //arpan.scalePic(arpan,.01,.01);
     arpan = arpan.scale(.25,.25);
     arpan.explore();
-    //arpan.grayscale();
-    arpan.randomize(50);
+    arpan.posterize();
+    //arpan.randomize(50);
     //arpan.explore();
 
 

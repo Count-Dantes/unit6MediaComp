@@ -432,6 +432,35 @@ public void mirrorDiagonalRightToLeft()
     }
   }
   
+  void cropAndCopy( Picture sourcePicture,
+                    int startSourceRow,
+                    int endSourceRow,
+                    int startSourceCol,
+                    int endSourceCol,
+                    int startDestRow,
+                    int startDestCol )
+  {
+      Pixel[][] destPixels = this.getPixels2D();
+      Pixel[][] sourcePixels = sourcePicture.getPixels2D();
+      int row = startSourceRow;
+      int col = startSourceCol;
+      int destRow = startDestRow;
+      int destCol = startDestCol;
+      for(int i = startSourceRow; i < endSourceRow; i++)
+      {
+          for(int j = startSourceCol; j < startSourceCol; j++)
+          {
+              destPixels[destRow][destCol] = sourcePixels[row][col];
+              destRow ++;
+              destCol ++;
+              row ++;
+              col ++;
+              
+          }         
+      }
+  }
+                   
+  
   public void scalePic(Picture fromPic, double scaleX, double scaleY)
   {
       fromPic.scale(scaleX, scaleY);      
@@ -519,10 +548,13 @@ public void mirrorDiagonalRightToLeft()
   public static void main(String[] args) 
   {
     Picture arpan = new Picture("arpan.jpg");
+    Picture snowman = new Picture("snowman.jpg");
     //arpan.scalePic(arpan,.01,.01);
     arpan = arpan.scale(.25,.25);
     arpan.explore();
-    arpan.posterize();
+    snowman.negate();
+    snowman.explore();
+    arpan.cropAndCopy(snowman, 50,1000,1,1000,20,34);
     //arpan.randomize(50);
     //arpan.explore();
 

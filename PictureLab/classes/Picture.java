@@ -442,21 +442,21 @@ public void mirrorDiagonalRightToLeft()
   {
       Pixel[][] destPixels = this.getPixels2D();
       Pixel[][] sourcePixels = sourcePicture.getPixels2D();
-      int row = startSourceRow;
-      int col = startSourceCol;
+      Pixel sourcePixel = null;
+      Pixel destPixel = null;
       int destRow = startDestRow;
       int destCol = startDestCol;
-      for(int i = startSourceRow; i < endSourceRow; i++)
+      for(int row = startSourceRow; row < endSourceRow; row++)
       {
-          for(int j = startSourceCol; j < startSourceCol; j++)
+          for(int col = startSourceCol; col < endSourceCol; col++)
           {
-              destPixels[destRow][destCol] = sourcePixels[row][col];
-              destRow ++;
+              sourcePixel = sourcePixels[row][col];
+              destPixel = destPixels[destRow][destCol];
+              destPixel.setColor(sourcePixel.getColor());
               destCol ++;
-              row ++;
-              col ++;
-              
-          }         
+          }
+          destCol = startDestCol;
+          destRow ++;
       }
   }
                    
@@ -547,21 +547,36 @@ public void mirrorDiagonalRightToLeft()
    */
   public static void main(String[] args) 
   {
-    Picture arpan = new Picture("arpan.jpg");
-    Picture snowman = new Picture("snowman.jpg");
+    Picture canvas = new Picture(1000,1000);
+    //canvas.explore();
+    Picture largeArpan = new Picture("arpan.jpg");
+    Picture arpan = new Picture("smallArpan.jpg");
+    //Picture snowman = new Picture("snowman.jpg");
     //arpan.scalePic(arpan,.01,.01);
-    arpan = arpan.scale(.25,.25);
+    largeArpan = largeArpan.scale(.25,.25);
     arpan.explore();
-    snowman.negate();
-    snowman.explore();
-    arpan.cropAndCopy(snowman, 50,1000,1,1000,20,34);
+    largeArpan.mirrorVerticalRightToLeft();
+    arpan.explore();
+    //largeArpan.mirrorHorizontal();
+    largeArpan.explore();
+    arpan.negate();
+    arpan.explore();
+    arpan.negate();
+    arpan.posterize();
+    arpan.explore();
+    arpan.negate();
+    arpan.explore();
+    //snowman.negate();
+    //snowman.explore();
+    //canvas.cropAndCopy(arpan, 0,460,0,690,0,0);
     //arpan.randomize(50);
     //arpan.explore();
 
 
     //beach.zeroBlue();
     //arpan.posterize();
-    arpan.explore();
+    //canvas.explore();
+    //arpan.explore();
   }
   
 } // this } is the end of class Picture, put all new methods before this

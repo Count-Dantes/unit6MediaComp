@@ -125,6 +125,55 @@ public class Picture extends SimplePicture
     }
   }
   
+  public void floodRed()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setRed(255);
+      }
+    }
+  }
+  
+  public void floodGreen()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setGreen(255);
+      }
+    }
+  }
+  
+  public void floodBlue()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setBlue(255);
+      }
+    }
+  }
+
+  public void halfIntensity()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        pixelObj.setBlue(pixelObj.getBlue()/2);
+        pixelObj.setRed(pixelObj.getRed()/2);
+        pixelObj.setGreen(pixelObj.getGreen()/2);
+      }
+    }
+  }
   
   public void negate()
   {
@@ -157,6 +206,28 @@ public class Picture extends SimplePicture
     }
   }
   
+  public void sepia()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    int averageValue = 0;
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        averageValue = pixelObj.getBlue() + pixelObj.getRed() + pixelObj.getGreen();
+        averageValue = averageValue / 3;
+        pixelObj.setBlue(averageValue);
+        pixelObj.setGreen(averageValue);
+        if(averageValue > 225)
+        {
+            averageValue = 225;            
+        }
+  
+        pixelObj.setRed(averageValue+30);
+      }
+    }
+  }
+  
   /** Method that mirrors the picture around a 
     * vertical mirror in the center of the picture
     * from left to right */
@@ -173,6 +244,26 @@ public class Picture extends SimplePicture
         leftPixel = pixels[row][col];
         rightPixel = pixels[row][width - 1 - col];
         rightPixel.setColor(leftPixel.getColor());
+      }
+    } 
+  }
+  
+  public void flip()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    Pixel topPixel = null;
+    Pixel tempPixel = null;
+    Pixel bottemPixel = null;
+    int width = pixels[0].length;
+    for (int row = 0; row < pixels.length/2; row++)
+    {
+      for (int col = 0; col < width; col++)
+      {
+        topPixel = pixels[row][col];
+        tempPixel.setColor(topPixel.getColor());
+        bottemPixel = pixels[pixels.length-row][col];
+        topPixel.setColor(bottemPixel.getColor());
+        bottemPixel.setColor(topPixel.getColor());
       }
     } 
   }
@@ -547,25 +638,60 @@ public void mirrorDiagonalRightToLeft()
    */
   public static void main(String[] args) 
   {
-    Picture canvas = new Picture(1000,1000);
     //canvas.explore();
     Picture largeArpan = new Picture("arpan.jpg");
     Picture arpan = new Picture("smallArpan.jpg");
+    int height = arpan.getHeight();
+    int width = arpan.getWidth();
+    Picture canvas = new Picture(3*height,3*width);
+    
+    Picture negativeArpan = new Picture("smallArpan.jpg"); 
+    Picture vMirroredArpan = new Picture("smallArpan.jpg");
+    Picture redFloodArpan = new Picture("smallArpan.jpg");
+    Picture zeroRedArpan = new Picture("smallArpan.jpg");
+    Picture posterizedArpan = new Picture("smallArpan.jpg");
+    Picture sepiaArpan = new Picture("smallArpan.jpg");
+    Picture zeroBlueArpan = new Picture("smallArpan.jpg");
+    Picture hMirroredArpan = new Picture("smallArpan.jpg");
+    Picture grayscaledArpan = new Picture("smallArpan.jpg");
+    
+    negativeArpan.negate();
+    vMirroredArpan.mirrorVertical();
+    redFloodArpan.floodRed();
+    zeroRedArpan.zeroRed();
+    posterizedArpan.posterize();
+    sepiaArpan.sepia();
+    zeroBlueArpan.zeroBlue();
+    hMirroredArpan.mirrorHorizontal();
+    grayscaledArpan.grayscale();
+    
+    canvas.cropAndCopy(vMirroredArpan,0,height,0,width,0,0);
+    canvas.cropAndCopy(posterizedArpan,0,height,0,width,0,width);
+    canvas.cropAndCopy(zeroRedArpan,0,height,0,width,0,2*width);
+    
+    canvas.cropAndCopy(sepiaArpan,0,height,0,width,height,0);
+    canvas.cropAndCopy(hMirroredArpan,0,height,0,width,height,width);
+    canvas.cropAndCopy(grayscaledArpan,0,height,0,width,height,2*width);
+    
+    canvas.cropAndCopy(zeroBlueArpan,0,height,0,width,2*height,0);
+    canvas.cropAndCopy(redFloodArpan,0,height,0,width,2*height,width);
+    canvas.cropAndCopy(negativeArpan,0,height,0,width,2*height,2*width);
+    
+    canvas = canvas.scale(.75,.75);
+    
+    
+    canvas.explore();
+    
+    canvas.write("MyCollage.jpg");
+    //arpan.explore();
+    //negativeArpan.explore();
+    //arpan.explore();
     //Picture snowman = new Picture("snowman.jpg");
     //arpan.scalePic(arpan,.01,.01);
-    largeArpan = largeArpan.scale(.25,.25);
-    arpan.explore();
-    largeArpan.mirrorVerticalRightToLeft();
-    arpan.explore();
+    //largeArpan = largeArpan.scale(.25,.25);
+    //arpan.explore();
+    //arpan.explore();
     //largeArpan.mirrorHorizontal();
-    largeArpan.explore();
-    arpan.negate();
-    arpan.explore();
-    arpan.negate();
-    arpan.posterize();
-    arpan.explore();
-    arpan.negate();
-    arpan.explore();
     //snowman.negate();
     //snowman.explore();
     //canvas.cropAndCopy(arpan, 0,460,0,690,0,0);
